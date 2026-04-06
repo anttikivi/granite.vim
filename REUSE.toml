@@ -1,0 +1,6 @@
+version = 1
+
+[[annotations]]
+path = ["**/.gitignore", "*.md", "*.toml", "*.yml"]
+SPDX-FileCopyrightText = "© 2026 Antti Kivi <anttik@anttikivi.com>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
