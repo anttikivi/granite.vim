@@ -1,1 +1,5 @@
+" SPDX-FileCopyrightText: © 2026 Antti Kivi <antti@anttikivi.com>
+"
+" SPDX-License-Identifier: GPL-3.0-or-later
+
 lua require("granite").load()

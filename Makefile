@@ -5,7 +5,7 @@
 .POSIX:
 .SUFFIXES:
 
-ANNOTATE_FILES = Makefile generate.lua palette.lua .github/workflows/*.yml lua/granite/*.lua
+ANNOTATE_FILES = Makefile generate.lua palette.lua .github/workflows/*.yml colors/* lua/granite/*
 
 all: lint
 
