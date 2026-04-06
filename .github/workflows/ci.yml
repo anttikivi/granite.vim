@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: © 2026 Antti Kivi <antti@anttikivi.com>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: leafo/gh-actions-lua@v12.0.0
+        with:
+          luaVersion: "5.1.5"
+      - uses: actions/cache@v5.0.0
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - run: |
+          if ! command -v selene &> /dev/null; then
+            cargo install selene
+          fi
+          if ! command -v stylua &> /dev/null; then
+            cargo install stylua
+          fi
+      - uses: fsfe/reuse-action@v6.0.0
+      - run: selene lua generate.lua palette.lua
+      - run: stylua --check .
+      - run: |
+          lua generate.lua
+          if ! git diff --exit-code; then
+            printf 'generated files are out of date\n'
+            printf 'run "lua generate.lua" locally and commit the changes\n'
+            git diff
+            exit 1
+          fi
