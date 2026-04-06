@@ -1,0 +1,38 @@
+-- SPDX-FileCopyrightText: © 2026 Antti Kivi <antti@anttikivi.com>
+--
+-- SPDX-License-Identifier: GPL-3.0-or-later
+
+---@class granite.Color
+---@field h number
+---@field s number
+---@field l number
+
+---@class granite.Palette
+---@field bg granite.Color
+---@field bg_light granite.Color
+---@field bg_hint granite.Color
+---@field fg granite.Color
+---@field fg_light granite.Color
+---@field gray granite.Color
+---@field light_gray granite.Color
+---@field red granite.Color
+---@field green granite.Color
+---@field yellow granite.Color
+---@field blue granite.Color
+---@field magenta granite.Color
+---@field cyan granite.Color
+
+---@class granite.Colors
+---@field bg string
+---@field bg_light string
+---@field bg_hint string
+---@field fg string
+---@field fg_light string
+---@field gray string
+---@field light_gray string
+---@field red string
+---@field green string
+---@field yellow string
+---@field blue string
+---@field magenta string
+---@field cyan string
