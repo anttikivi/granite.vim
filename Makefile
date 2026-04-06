@@ -5,7 +5,7 @@
 .POSIX:
 .SUFFIXES:
 
-ANNOTATE_FILES = Makefile palette.lua
+ANNOTATE_FILES = Makefile palette.lua lua/granite/*.lua
 
 all: lint
 
