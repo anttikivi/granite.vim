@@ -147,7 +147,7 @@ function M.groups(c, opts)
         PmenuBorder = "Pmenu",
         PmenuShadow = "FloatShadow",
         PmenuShadowThrough = "FloatShadowThrough",
-        PreInsert = "Added",
+        PreInsert = { fg = c.gray },
         ComplMatchIns = none,
         ComplHint = "NonText",
         ComplHintMore = "MoreMsg",
