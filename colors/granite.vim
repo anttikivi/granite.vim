@@ -2,4 +2,16 @@
 "
 " SPDX-License-Identifier: GPL-3.0-or-later
 
-lua require("granite").load()
+if has('nvim')
+  lua require("granite").load()
+else
+  highlight clear
+
+  if exists('syntax_on')
+    syntax reset
+  endif
+
+  let g:colors_name = 'granite'
+
+  call granite#Load()
+endif

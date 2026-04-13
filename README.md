@@ -35,7 +35,10 @@ Plug 'anttikivi/granite.nvim'
 
 After installing `granite.nvim`, you can simply set it as your color scheme.
 
+For Vim, enable `termguicolors` first.
+
 ```vim
+set termguicolors
 colorscheme granite
 ```
 
@@ -56,6 +59,14 @@ possible to configure this behavior.
 
 There is no need to call `setup` if you don’t want to change the default
 configuration options.
+
+In Vim, transparent background uses `g:granite_transparent` instead of Lua
+`setup()`.
+
+```vim
+let g:granite_transparent = 1
+colorscheme granite
+```
 
 ```lua
 require("granite").setup({
