@@ -10,7 +10,7 @@ ANNOTATE_FILES = Makefile generate.lua palette.lua .github/workflows/*.yml color
 all: lint
 
 lint: FORCE
-	uvx reuse lint
+	uvx --from='reuse[charset-normalizer]' reuse lint
 	selene .
 	stylua . --check
 
@@ -18,6 +18,10 @@ build: FORCE
 	lua generate.lua
 
 annotate: FORCE
-	uvx reuse annotate -c "Antti Kivi <antti@anttikivi.com>" -l GPL-3.0-or-later -y 2026 --copyright-prefix spdx-symbol $(ANNOTATE_FILES)
+	uvx --from='reuse[charset-normalizer]' reuse annotate \
+		-c "Antti Kivi <antti@anttikivi.com>" \
+		-l GPL-3.0-or-later \
+		-y 2026 \
+		--copyright-prefix spdx-symbol $(ANNOTATE_FILES)
 
 FORCE: ;
