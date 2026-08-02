@@ -80,36 +80,35 @@ end
 ---@param value vim.api.keyset.highlight | string
 ---@return string
 local function vim_line(group, value)
-    local line = { "    highlight" }
-
     if type(value) == "string" then
-        table.insert(line, "link")
-        table.insert(line, group)
-        table.insert(line, value)
-    else
-        table.insert(line, group)
+        return value == "NONE" and string.format("    highlight %s NONE", group)
+            or string.format("    highlight %s NONE | highlight! link %s %s", group, group, value)
+    end
 
-        local gui = {}
+    local line = {
+        string.format("    highlight %s NONE | highlight %s", group, group),
+    }
+    local attributes = {}
 
-        for _, name in ipairs({ "bold", "italic", "reverse", "underline", "undercurl", "strikethrough" }) do
-            if value[name] then
-                table.insert(gui, name)
-            end
+    for _, name in ipairs({ "bold", "italic", "reverse", "underline", "undercurl", "strikethrough" }) do
+        if value[name] then
+            table.insert(attributes, name)
         end
+    end
 
-        if #gui > 0 then
-            table.insert(line, string.format("gui=%s", table.concat(gui, ",")))
-        end
+    local attribute_value = #attributes > 0 and table.concat(attributes, ",") or "NONE"
+    for _, mode in ipairs({ "term", "cterm", "gui" }) do
+        table.insert(line, string.format("%s=%s", mode, attribute_value))
+    end
 
-        for _, name in ipairs({ "fg", "bg", "sp" }) do
-            local color = value[name]
-            if color ~= nil then
-                local key = name == "sp" and "guisp" or string.format("gui%s", name)
-                if type(color) == "number" then
-                    table.insert(line, string.format("%s=%d", key, color))
-                else
-                    table.insert(line, string.format("%s=%s", key, color))
-                end
+    for _, name in ipairs({ "fg", "bg", "sp" }) do
+        local color = value[name]
+        if color ~= nil then
+            local key = name == "sp" and "guisp" or string.format("gui%s", name)
+            if type(color) == "number" then
+                table.insert(line, string.format("%s=%d", key, color))
+            else
+                table.insert(line, string.format("%s=%s", key, color))
             end
         end
     end
@@ -182,14 +181,11 @@ local function main()
     local highlights = require("lua.granite.highlights")
 
     table.insert(output, "    if get(g:, 'granite_transparent', 0)")
-    table.insert(output, string.format("      highlight Normal guifg=%s guibg=NONE", colors.dark.fg))
-    table.insert(output, string.format("      highlight SignColumn guifg=%s guibg=NONE", colors.dark.gray))
+    table.insert(output, string.format("  %s", vim_line("Normal", { fg = colors.dark.fg, bg = "NONE" })))
+    table.insert(output, string.format("  %s", vim_line("SignColumn", { fg = colors.dark.gray, bg = "NONE" })))
     table.insert(output, "    else")
-    table.insert(output, string.format("      highlight Normal guifg=%s guibg=%s", colors.dark.fg, colors.dark.bg))
-    table.insert(
-        output,
-        string.format("      highlight SignColumn guifg=%s guibg=%s", colors.dark.gray, colors.dark.bg)
-    )
+    table.insert(output, string.format("  %s", vim_line("Normal", { fg = colors.dark.fg, bg = colors.dark.bg })))
+    table.insert(output, string.format("  %s", vim_line("SignColumn", { fg = colors.dark.gray, bg = colors.dark.bg })))
     table.insert(output, "    endif")
     table.insert(output, "")
 
@@ -206,13 +202,13 @@ local function main()
     table.insert(output, "  else")
 
     table.insert(output, "    if get(g:, 'granite_transparent', 0)")
-    table.insert(output, string.format("      highlight Normal guifg=%s guibg=NONE", colors.light.fg))
-    table.insert(output, string.format("      highlight SignColumn guifg=%s guibg=NONE", colors.light.gray))
+    table.insert(output, string.format("  %s", vim_line("Normal", { fg = colors.light.fg, bg = "NONE" })))
+    table.insert(output, string.format("  %s", vim_line("SignColumn", { fg = colors.light.gray, bg = "NONE" })))
     table.insert(output, "    else")
-    table.insert(output, string.format("      highlight Normal guifg=%s guibg=%s", colors.light.fg, colors.light.bg))
+    table.insert(output, string.format("  %s", vim_line("Normal", { fg = colors.light.fg, bg = colors.light.bg })))
     table.insert(
         output,
-        string.format("      highlight SignColumn guifg=%s guibg=%s", colors.light.gray, colors.light.bg)
+        string.format("  %s", vim_line("SignColumn", { fg = colors.light.gray, bg = colors.light.bg }))
     )
     table.insert(output, "    endif")
     table.insert(output, "")
